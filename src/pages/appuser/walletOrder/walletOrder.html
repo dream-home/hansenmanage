@@ -1,0 +1,81 @@
+
+<!--搜索区域-->
+<div class="search-box">
+      订单号：<input [(ngModel)]="find.orderNo" />
+      <!-- 收款用户手机号:<input [(ngModel)]="find.mobile" /> -->
+      收款用户UID:<input [(ngModel)]="find.uid" />
+      <!--昵称:<input [(ngModel)]="find.nickName"/>
+      姓名:<input [(ngModel)]="find.name"/> -->
+      交易类型：<select id = "sel"  [(ngModel)]="find.currencyType">
+            <option  value = "" selected="selected">全部</option>
+            <option  value = "1">交易币内部转账</option>
+            <option  value = "4">支付币内部转账</option>
+            <option  value = "7">股权币内部转账</option>
+          </select>
+      <button type="button" class="btn btn-primary" (click)='loadData()'>搜索</button>
+</div>
+
+<!--按钮区域-->
+<div class="button-box text-right">
+
+</div>
+
+<!--数据显示区域-->
+<div class="table-box">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr class="active">
+                <th>订单号</th>
+                <th>付款UID</th>
+                <th>收款UID</th>
+                <th>交易类型</th>
+                <th>金额</th>
+                <th>实际到账</th>
+                <!-- <th>手续费</th> -->
+                <th>交易时间</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of httpService.items; let i = index">
+                <td>{{item.orderNo}}</td>
+                <td>{{item.sendUserId}}</td>
+                <td>{{item.receviceUserId}}</td>
+                <td>
+                  <span *ngIf="item.orderType==1">交易币内部转账</span>
+                  <span *ngIf="item.orderType==4">支付币内部转账</span>
+                  <span *ngIf="item.orderType==7">股权币内部转账</span>
+                  <span *ngIf="item.orderType==10">交易币管理员充值</span>
+                  <span *ngIf="item.orderType==11">购物币管理员充值</span>
+                  <span *ngIf="item.orderType==12">股权币管理员充值</span>
+                </td>
+                <td>{{-item.amount}}</td>
+                <td>{{-item.confirmAmt}}</td>
+                <!-- <td>{{item.poundage}}</td> -->
+                <td>{{utils.formatDate(item.createTime,'yyyy-MM-dd HH:mm:ss')}}</td>
+                <td>
+                  <span *ngIf="item.status==4">交易成功</span>
+                  <!-- {{item.state!=10?"正常":item.state==20?"禁用":"删除"}}</td> -->
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--分页区域-->
+<div class="pagination-box text-center">
+    <ul class="pagination">
+        <li [class]="httpService.currentPage==1?'active':''">
+            <a href="javascript:;" (click)="httpService.toFirstPage()">首页</a>
+        </li>
+        <li [class]="httpService.currentPage==1?'disabled':''">
+            <a href="javascript:;"  (click)="httpService.prev()">上一页</a>
+        </li>
+        <li class="disabled"><a href="javascript:;">第{{httpService.currentPage}}页 | 共{{httpService.totalPage}}页</a></li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'disabled':''">
+            <a href="javascript:;" (click)="httpService.next()">下一页</a>
+        </li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'active':''">
+            <a href="javascript:;" (click)="httpService.toEndPage()">末页</a>
+        </li>
+    </ul>
+</div>

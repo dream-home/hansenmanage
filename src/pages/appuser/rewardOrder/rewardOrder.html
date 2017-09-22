@@ -1,0 +1,99 @@
+
+<!--搜索区域-->
+<div class="search-box">
+      uid: <input [(ngModel)]="find.uid" />
+      手机:<input [(ngModel)]="find.phone" />
+      <!-- 昵称:<input [(ngModel)]="find.nickName"/>
+      姓名:<input [(ngModel)]="find.name"/> -->
+      奖金类型:<select id =  "sel" [(ngModel)]="find.tradeOrderType">
+            <option  value = "" >全部</option>
+            <option  value = "2" >推荐奖</option>
+            <option  value = "3" >管理奖</option>
+            <option  value = "4" >极差奖</option>
+            <option  value = "5" >平级奖</option>
+            <option  value = "6" >周期释放</option>
+          </select>
+      <!-- 信用:<select id = "sel"  [(ngModel)]="find.cardGrade">
+            <option  value = "">全部</option>
+            <option  value = "1">一星</option>
+            <option  value = "2">二星</option>
+            <option  value = "3">三星</option>
+            <option  value = "4">四星</option>
+            <option  value = "5">五星</option>
+          </select> -->
+      <button type="button" class="btn btn-primary" (click)='loadData()'>搜索</button>
+</div>
+
+<!--按钮区域-->
+<div class="button-box text-right">
+
+</div>
+
+<!--数据显示区域-->
+<div class="table-box">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr class="active">
+                <th style="width: 19%;">单号</th>
+                <th style="width: 7%;">UID</th>
+                <th style="width: 7%;">奖励类型</th>
+                <th style="width: 7%;">奖励金额</th>
+                <th style="width: 5%;">任务周期</th>
+                <th style="width: 5%;">领奖周期</th>
+                <th style="width:30%;">奖励描述</th>
+                <th style="width: 13%;">生成时间</th>
+                <th style="width: 10%;">状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of httpService.items; let i = index">
+                <!-- <td>{{(i+1)}}</td> -->
+                <td>{{item.orderNo}}</td>
+                <td>{{item.uid}}</td>
+                <td>{{item.rewardType}}</td>
+                <td>{{item.amt}}</td>
+                <td>{{item.taskCycle}}</td>
+                <td>{{item.signCycle}}</td>
+                <td>{{item.remark}}</td>
+                <!-- <td>{{item.cardGradeName}}</td> -->
+                <!-- <td>{{item.equityAmtScale}}</td>
+                <td>{{item.payAmtScale}}</td>
+                <td>{{item.tradeAmtScale}}</td> -->
+                <td>{{utils.formatDate(item.createTime,'MM-dd HH:mm')}}</td>
+                <td>
+                  <span *ngIf="item.status==2">任务进行中</span>
+                  <span *ngIf="item.status==3">奖励已发放</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--分页区域-->
+<div class="pagination-box text-center">
+    <ul class="pagination">
+        <li [class]="httpService.currentPage==1?'active':''">
+            <a href="javascript:;" (click)="httpService.toFirstPage()">首页</a>
+        </li>
+        <li [class]="httpService.currentPage==1?'disabled':''">
+            <a href="javascript:;"  (click)="httpService.prev()">上一页</a>
+        </li>
+        <li class="disabled"><a href="javascript:;">第{{httpService.currentPage}}页 | 共{{httpService.totalPage}}页</a></li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'disabled':''">
+            <a href="javascript:;" (click)="httpService.next()">下一页</a>
+        </li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'active':''">
+            <a href="javascript:;" (click)="httpService.toEndPage()">末页</a>
+        </li>
+    </ul>
+</div>
+
+<!--编辑页面-->
+<div id="editPanel" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;姓名</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="name" [(ngModel)]="editDate.name" placeholder="请输入姓名"/>
+        </div>
+    </div>
+</div>

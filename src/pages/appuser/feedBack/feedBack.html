@@ -1,0 +1,55 @@
+
+<!--搜索区域-->
+<!-- <div class="search-box">
+      收款用户手机号:<input [(ngModel)]="find.mobile" />
+      付款用户UID:<input [(ngModel)]="find.suid" />
+      收款用户UID:<input [(ngModel)]="find.ruid" />
+      <button type="button" class="btn btn-primary" (click)='loadData()'>搜索</button>
+</div> -->
+
+<!--按钮区域-->
+<div class="button-box text-right">
+
+</div>
+
+<!--数据显示区域-->
+<div class="table-box">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr class="active">
+                <th style="width: 6%;">UID</th>
+                <th style="width: 10%;">手机号</th>
+                <th style="width: 70%;">内容</th>
+                <th style="width: 14%;">时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of httpService.items; let i = index">
+                <td>{{item.userId}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.detail}}</td>
+                <!-- <td>{{item.poundage}}</td> -->
+                <td>{{utils.formatDate(item.createTime,'yyyy-MM-dd HH:mm:ss')}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--分页区域-->
+<div class="pagination-box text-center">
+    <ul class="pagination">
+        <li [class]="httpService.currentPage==1?'active':''">
+            <a href="javascript:;" (click)="httpService.toFirstPage()">首页</a>
+        </li>
+        <li [class]="httpService.currentPage==1?'disabled':''">
+            <a href="javascript:;"  (click)="httpService.prev()">上一页</a>
+        </li>
+        <li class="disabled"><a href="javascript:;">第{{httpService.currentPage}}页 | 共{{httpService.totalPage}}页</a></li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'disabled':''">
+            <a href="javascript:;" (click)="httpService.next()">下一页</a>
+        </li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'active':''">
+            <a href="javascript:;" (click)="httpService.toEndPage()">末页</a>
+        </li>
+    </ul>
+</div>

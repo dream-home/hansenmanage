@@ -1,0 +1,129 @@
+
+<!--搜索区域-->
+<div class="search-box">
+    <!-- uid: <input [(ngModel)]="find.uid" />
+    手机:<input [(ngModel)]="find.mobile" />
+    昵称:<input [(ngModel)]="find.nickName"/>
+    内容:<input [(ngModel)]="find.content"/>
+    时间日期:<input [(ngModel)]="find.startTime" type="date"/>-<input [(ngModel)]="find.endTime" type="date" />
+    <button type="button" class="btn btn-primary" (click)='loadData()'>搜索</button> -->
+</div>
+
+<!--按钮区域-->
+<div class="button-box text-right">
+      <button type="button" class="btn btn-primary" (click)="showAddPanel()"><span class="fa fa-plus-circle"></span> 新增</button>
+</div><!--按钮区域-->
+
+<!--数据显示区域-->
+<div class="table-box">
+    <table class="table table-bordered table-hover" style="width:2000px;">
+        <thead>
+            <tr class="active">
+                <th style="width:10%">任务标题</th>
+                <th style="width:6%">资源类型</th>
+                <th style="width:20%">资源地址</th>
+                <th style="width:40%">任务描述</th>
+                <th style="width:13%">创建时间</th>
+                <th style="width:10%">状态</th>
+                <th style="width:12%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of httpService.items; let i = index">
+                <td>{{item.name}}</td>
+                <td>
+                  <span *ngIf="item.taskType==2">图片</span>
+                  <span *ngIf="item.taskType==3">视频</span>
+                </td>
+                <td>
+                    {{item.linkImgPath}}
+                </td>
+                <td>{{item.remark}}</td>
+                <td>{{utils.formatDate(item.createTime,'yyyy-MM-dd HH:mm:ss')}}</td>
+                <td>{{item.status == 1 ? '正常' : '已失效'}}</td>
+                <td>
+                    <button type="button" *ngIf="item.status==1" (click)="showEditPanel(item)" class="btn btn-info btn-xs">编辑</button>
+                    <button type="button" *ngIf="item.status!=0"(click)="showDelPanel(item)" class="btn btn-info btn-xs">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--分页区域-->
+<div class="pagination-box text-center">
+    <ul class="pagination">
+        <li [class]="httpService.currentPage==1?'active':''">
+            <a href="javascript:;" (click)="httpService.toFirstPage()">首页</a>
+        </li>
+        <li [class]="httpService.currentPage==1?'disabled':''">
+            <a href="javascript:;"  (click)="httpService.prev()">上一页</a>
+        </li>
+        <li class="disabled"><a href="javascript:;">第{{httpService.currentPage}}页 | 共{{httpService.totalPage}}页</a></li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'disabled':''">
+            <a href="javascript:;" (click)="httpService.next()">下一页</a>
+        </li>
+        <li [class]="httpService.currentPage==httpService.totalPage?'active':''">
+            <a href="javascript:;" (click)="httpService.toEndPage()">末页</a>
+        </li>
+    </ul>
+</div>
+
+
+<!--新增页面-->
+<div id="editPanel" class="form-horizontal">
+  <div class="form-group">
+      <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;任务标题</label>
+      <div class="col-sm-8">
+          <input type="text" class="form-control"   maxlength=12 id="names" [(ngModel)]="subData.name" placeholder="请输入任务标题,不超过12个字符"/>
+      </div>
+  </div>
+  <div class="form-group">
+      <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;资源地址</label>
+      <div class="col-sm-8">
+          <input type="text" class="form-control" id="linkImgPath" [(ngModel)]="subData.linkImgPath" placeholder="请输入资源地址"/>
+      </div>
+  </div>
+ <div class="form-group"  style="display:none">
+      <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;完成任务可获取奖励次数</label>
+      <div class="col-sm-8">
+          <input type="text" class="form-control" id="rewardNo" [(ngModel)]="subData.rewardNo" placeholder="请输入完成任务可获取奖励次数"/>
+      </div>
+  </div>
+ <!-- <div class="form-group"  style="display:none">
+      <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;任务链接</label>
+      <div class="col-sm-8">
+          <input type="text" class="form-control" id="link" [(ngModel)]="subData.link" placeholder="请输入任务链接"/>
+      </div>
+  </div> -->
+  <div class="form-group">
+      <label class="col-sm-4 control-label"><span class="text-danger">*</span>&nbsp;资源类型</label>
+      <div class="col-sm-8">
+          <select class="form-control" id="taskType" [(ngModel)]="subData.taskType" placeholder="请输入资源类型">
+              <option value="2">图片</option>
+              <option value="3">视频</option>
+          </select>
+          <!-- <input type="text" class="form-control" id="taskType" [(ngModel)]="subData.taskType" placeholder="请输入任务类型"/> -->
+      </div>
+  </div>
+  <div class="form-group">
+      <label class="col-sm-4 control-label">&nbsp;任务内容</label>
+      <div class="col-sm-8">
+          <textarea class="form-control" id="remark" maxlength=1200  [(ngModel)]="subData.remark" placeholder="请输入内容,最大可输入1200个字符" rows="3"></textarea>
+      </div>
+  </div>
+ <div class="form-group"  style="display:none">
+      <label class="col-sm-4 control-label">&nbsp;状态</label>
+      <div class="col-sm-8">
+          <label class="radio-inline">
+              <input type="radio" value="1" [(ngModel)]="subData.status">任务已分配
+          </label>
+          <label class="radio-inline">
+              <input type="radio" value="2" [(ngModel)]="subData.status">任务已完成
+          </label>
+          <label class="radio-inline">
+              <input type="radio" value="3" [(ngModel)]="subData.status">任务已失效
+          </label>
+      </div>
+  </div>
+</div>
