@@ -56,7 +56,7 @@ export class CointOutOrderPage {
             return false;
           }
           walletOrderPage.httpService.post({
-              url:'/coin/coinverfy',
+              url:'/coin/coincheckorder',
               data:upUser
           }).subscribe((data:any)=>{
               layer.closeAll();
@@ -91,7 +91,7 @@ export class CointOutOrderPage {
             return false;
           }
           walletOrderPage.httpService.post({
-              url:'/coin/coinverfy',
+              url:'/coin/coincheckorder',
               data:upUser
           }).subscribe((data:any)=>{
               layer.closeAll();
